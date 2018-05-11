@@ -46,9 +46,25 @@ namespace mprNestedFamilyParamsTransfer
             {
                 if (element is FamilyInstance familyInstance)
                 {
-                    NestedFamilyInstanceModels.Add(new NestedFamilyInstanceModel(familyInstance));
+                    if (!CheckIsCopyInstanse(familyInstance))
+                        NestedFamilyInstanceModels.Add(new NestedFamilyInstanceModel(familyInstance));
                 }
             }
+        }
+
+        private bool CheckIsCopyInstanse(FamilyInstance familyInstance)
+        {
+            foreach (NestedFamilyInstanceModel nestedFamilyInstanceModel in NestedFamilyInstanceModels)
+            {
+                if (nestedFamilyInstanceModel.NestedFamilyInstance.GetTypeId().IntegerValue ==
+                    familyInstance.GetTypeId().IntegerValue)
+                {
+                    nestedFamilyInstanceModel.Count += 1;
+                    return true;
+                }
+            }
+
+            return false;
         }
         #endregion
     }

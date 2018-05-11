@@ -5,6 +5,7 @@
         public MainWindow()
         {
             InitializeComponent();
+            Title = "Nested Family InstanceParameters Transfer";
         }
     }
 }

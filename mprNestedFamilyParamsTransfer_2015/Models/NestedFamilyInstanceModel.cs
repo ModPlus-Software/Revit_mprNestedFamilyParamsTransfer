@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Windows.Input;
 using Autodesk.Revit.DB;
 using mprNestedFamilyParamsTransfer.Helpers;
 
@@ -11,28 +11,31 @@ namespace mprNestedFamilyParamsTransfer.Models
         public NestedFamilyInstanceModel(FamilyInstance familyInstance)
         {
             NestedFamilyInstance = familyInstance;
-            InstanceParameters = new ObservableCollection<NestedFamilyParameterModel>();
-            TypeParameters = new ObservableCollection<NestedFamilyParameterModel>();
+            ShowFamilyInstanceCommand = new RelayCommand(ShowFamilyInstance);
+            InstanceParameters = new List<NestedFamilyParameterModel>();
+            TypeParameters = new List<NestedFamilyParameterModel>();
             GetParameters();
         }
 
         public FamilyInstance NestedFamilyInstance;
         public string Name => NestedFamilyInstance.Name;
+        
+        public List<NestedFamilyParameterModel> InstanceParameters { get; }
+        public List<NestedFamilyParameterModel> TypeParameters { get; }
 
-        private int _count = 1;
-        public int Count
+        public List<NestedFamilyParameterModel> AllParameters
         {
-            get => _count;
-            set
+            get
             {
-                if (value == _count) return;
-                _count = value;
-                OnPropertyChanged();
+                List<NestedFamilyParameterModel> list = new List<NestedFamilyParameterModel>();
+                foreach (var nestedFamilyParameterModel in InstanceParameters)
+                    list.Add(nestedFamilyParameterModel);
+                foreach (var nestedFamilyParameterModel in TypeParameters)
+                    list.Add(nestedFamilyParameterModel);
+
+                return list;
             }
         }
-
-        public ObservableCollection<NestedFamilyParameterModel> InstanceParameters { get; }
-        public ObservableCollection<NestedFamilyParameterModel> TypeParameters { get; }
 
         #region Methods
 
@@ -42,16 +45,22 @@ namespace mprNestedFamilyParamsTransfer.Models
             foreach (Parameter parameter in NestedFamilyInstance.Parameters)
             {
                 if (NestedFamilyInstance.Document.FamilyManager.CanElementParameterBeAssociated(parameter))
-                    InstanceParameters.Add(new NestedFamilyParameterModel(parameter));
+                    InstanceParameters.Add(new NestedFamilyParameterModel(parameter, this));
             }
             // get type parameters
             foreach (Parameter parameter in NestedFamilyInstance.Symbol.Parameters)
             {
                 if (NestedFamilyInstance.Document.FamilyManager.CanElementParameterBeAssociated(parameter))
-                    TypeParameters.Add(new NestedFamilyParameterModel(parameter));
+                    TypeParameters.Add(new NestedFamilyParameterModel(parameter, this));
             }
         }
 
+        public ICommand ShowFamilyInstanceCommand { get; }
+
+        private void ShowFamilyInstance(object o)
+        {
+            RevitInterop.UiDocument.Selection.SetElementIds(new List<ElementId>{NestedFamilyInstance.Id});
+        }
 
         #endregion
     }

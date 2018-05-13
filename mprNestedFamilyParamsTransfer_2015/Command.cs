@@ -14,6 +14,8 @@ namespace mprNestedFamilyParamsTransfer
         {
             try
             {
+                ModPlusAPI.Statistic.SendCommandStarting(new Interface());
+
                 var doc = commandData.Application.ActiveUIDocument.Document;
                 if (!doc.IsFamilyDocument)
                 {

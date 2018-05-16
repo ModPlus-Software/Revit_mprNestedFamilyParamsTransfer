@@ -59,6 +59,9 @@
     <Compile Include="..\mprNestedFamilyParamsTransfer_2015\Helpers\RelayCommand.cs">
       <Link>Helpers\RelayCommand.cs</Link>
     </Compile>
+    <Compile Include="..\mprNestedFamilyParamsTransfer_2015\Helpers\RevitEvent.cs">
+      <Link>Helpers\RevitEvent.cs</Link>
+    </Compile>
     <Compile Include="..\mprNestedFamilyParamsTransfer_2015\Helpers\RevitInterop.cs">
       <Link>Helpers\RevitInterop.cs</Link>
     </Compile>
@@ -81,6 +84,10 @@
     <Compile Include="..\mprNestedFamilyParamsTransfer_2015\Models\NestedFamilyParameterModel.cs">
       <Link>Models\NestedFamilyParameterModel.cs</Link>
     </Compile>
+    <Compile Include="..\mprNestedFamilyParamsTransfer_2015\SelectExistParameter.xaml.cs">
+      <Link>SelectExistParameter.xaml.cs</Link>
+      <DependentUpon>SelectExistParameter.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Interface.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -96,6 +103,11 @@
   <ItemGroup>
     <Page Include="..\mprNestedFamilyParamsTransfer_2015\MainWindow.xaml">
       <Link>MainWindow.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\mprNestedFamilyParamsTransfer_2015\SelectExistParameter.xaml">
+      <Link>SelectExistParameter.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

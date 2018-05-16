@@ -1,4 +1,5 @@
-﻿using Autodesk.Revit.DB;
+﻿using System.Windows.Input;
+using Autodesk.Revit.DB;
 using mprNestedFamilyParamsTransfer.Helpers;
 
 namespace mprNestedFamilyParamsTransfer.Models
@@ -6,18 +7,26 @@ namespace mprNestedFamilyParamsTransfer.Models
     /// <summary>Параметр вложенного семейства</summary>
     public class NestedFamilyParameterModel : VmBase
     {
-        public NestedFamilyParameterModel(Parameter parameter, NestedFamilyInstanceModel nestedFamilyInstance)
+        public NestedFamilyParameterModel(
+            Parameter parameter,
+            NestedFamilyInstanceModel nestedFamilyInstance, 
+            bool isInstanceParameter,
+            MainViewModel mainViewModel)
         {
             Parameter = parameter;
             NestedFamilyInstance = nestedFamilyInstance;
+            IsInstance = isInstanceParameter;
+            AssociateToExistFamilyParameterCommand = new RelayCommand(AssociateToExistFamilyParameter);
+            _mainViewModel = mainViewModel;
         }
+
+        private readonly MainViewModel _mainViewModel;
 
         public Parameter Parameter;
         public NestedFamilyInstanceModel NestedFamilyInstance;
+        public bool IsInstance;
 
         public string Name => Parameter.Definition.Name;
-
-        public StorageType StorageType => Parameter.StorageType;
 
         public string DisplayValue
         {
@@ -48,8 +57,11 @@ namespace mprNestedFamilyParamsTransfer.Models
                 if (value == _isLinked) return;
                 _isLinked = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(CanLink));
             }
         }
+
+        public bool CanLink => !IsLinked;
 
         public AssociatedParameterModel AssociatedParameter { get; set; }
 
@@ -65,6 +77,13 @@ namespace mprNestedFamilyParamsTransfer.Models
                     AssociatedParameter.IsSelected = value;
                 OnPropertyChanged();
             }
+        }
+
+        public ICommand AssociateToExistFamilyParameterCommand { get; }
+
+        private void AssociateToExistFamilyParameter(object o)
+        {
+            _mainViewModel.AssociateToExistFamilyParameter(this);
         }
     }
 }

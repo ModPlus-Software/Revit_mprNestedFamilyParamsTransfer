@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Autodesk.Revit.DB;
 using mprNestedFamilyParamsTransfer.Helpers;

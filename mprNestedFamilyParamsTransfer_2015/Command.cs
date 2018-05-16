@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Windows;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+using mprNestedFamilyParamsTransfer.Annotations;
 using mprNestedFamilyParamsTransfer.Helpers;
+using ModPlusAPI.Windows;
 
 namespace mprNestedFamilyParamsTransfer
 {
@@ -22,18 +23,81 @@ namespace mprNestedFamilyParamsTransfer
                     MessageBox.Show("Запуск плагина доступен только в редакторе семейств");
                     return Result.Cancelled;
                 }
-                
+                var fm = doc.FamilyManager;
+                // check for familyType
+                if (fm.CurrentType == null)
+                {
+                    if (fm.Types.IsEmpty)
+                    {
+                        TaskDialog taskDialog = new TaskDialog("ModPlus")
+                        {
+                            MainContent =
+                                "Внимание! В текущем семействе отсутствуют типоразмеры! Корректная работа Функции не возможна!" +
+                                Environment.NewLine +
+                                "Вы можете выбрать вариант \"Продолжить и создать типоразмер\" - тогда Функция создаст типоразмер с именем: " +
+                                doc.Title + Environment.NewLine +
+                                "Если Вы не хотите создавать новый типоразмер, то Вам нужно выполнить следующие действия:" +
+                                Environment.NewLine +
+                                "1. Выберите вариант \"Вернуться в редактор семейства\"" + Environment.NewLine +
+                                "2. Откройте стандартное диалоговое окно \"Типоразмеры в семействе\"" +
+                                Environment.NewLine +
+                                "3. Создайте новый типоразмер и сразу его удалите" + Environment.NewLine +
+                                "4. Еще раз запустите данную Функцию"
+                        };
+                        taskDialog.AddCommandLink(TaskDialogCommandLinkId.CommandLink1,
+                            "Продолжить и создать типоразмер");
+                        taskDialog.AddCommandLink(TaskDialogCommandLinkId.CommandLink2,
+                            "Вернуться в редактор семейства");
+                        var result = taskDialog.Show();
+                        if (result == TaskDialogResult.CommandLink1)
+                        {
+                            RevitInterop.RevitEvent.Run(() =>
+                            {
+                                fm.NewType(doc.Title);
+                            }, false);
+                        }
+                        else return Result.Succeeded;
+                    }
+                    else fm.CurrentType = fm.Types.GetEnumerator().Current as FamilyType;
+                }
+
                 RevitInterop.UiApplication = commandData.Application;
-                MainWindow window = new MainWindow();
-                window.ShowDialog();
+                RevitInterop.InitEvents();
+                FunctionStarter.Start();
 
                 return Result.Succeeded;
             }
             catch (Exception exception)
             {
-                MessageBox.Show(exception.Message);
+                ExceptionBox.Show(exception);
                 return Result.Failed;
             }
+        }
+    }
+
+    public static class FunctionStarter
+    {
+        [CanBeNull]
+        public static MainWindow MainWindow;
+
+        public static void Start()
+        {
+            if (MainWindow != null)
+            {
+                MainWindow.Activate();
+                MainWindow.Focus();
+            }
+            else
+            {
+                MainWindow = new MainWindow();
+                MainWindow.Closed += MainWindow_Closed;
+                MainWindow.ShowDialog();
+            }
+        }
+
+        private static void MainWindow_Closed(object sender, EventArgs e)
+        {
+            MainWindow = null;
         }
     }
 }

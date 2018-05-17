@@ -9,7 +9,7 @@ namespace mprNestedFamilyParamsTransfer
     {
         public SupportedProduct SupportedProduct => SupportedProduct.Revit;
         public string Name => "mprNestedFamilyParamsTransfer";
-        public string AvailProductExternalVersion => "2019";
+        public string AvailProductExternalVersion => "2017";
         public string FullClassName => "mprNestedFamilyParamsTransfer.Command";
         public string AppFullClassName => string.Empty;
         public Guid AddInId => Guid.Empty;

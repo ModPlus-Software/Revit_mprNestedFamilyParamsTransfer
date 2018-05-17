@@ -170,6 +170,7 @@
                     </Rectangle>
                 </Grid>
             </DataTemplate>
+            <XmlDataProvider x:Key="Lang" Source="E:/ModPlus/Languages/en-US.xml" XPath="ModPlus/mprNestedFamilyParamsTransfer" />
         </ResourceDictionary>
     </Window.Resources>
     <Window.DataContext>
@@ -198,26 +199,26 @@
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
             </Grid.RowDefinitions>
-            <TextBlock Grid.Column="0" Grid.Row="0" Text="Маска имени создаваемого параметра:"></TextBlock>
+            <TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding Source={StaticResource Lang}, XPath=h2}"></TextBlock>
             <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Path=Prefix}"
-                     controls:TextBoxHelper.Watermark="Префикс"></TextBox>
-            <TextBlock Grid.Column="2" Grid.Row="0" Text="Имя параметра"
+                     controls:TextBoxHelper.Watermark="{Binding Source={StaticResource Lang}, XPath=h3}"></TextBox>
+            <TextBlock Grid.Column="2" Grid.Row="0" Text="{Binding Source={StaticResource Lang}, XPath=h4}"
                        ToolTipService.InitialShowDelay="0"
                        ToolTipService.ShowDuration="15000">
                 <TextBlock.ToolTip>
                     <TextBlock FontSize="14" TextWrapping="Wrap" MaxWidth="350"
-                               Text="Имя параметра вложенного экземпляра семейства для которого создается связанный параметр"></TextBlock>
+                               Text="{Binding Source={StaticResource Lang}, XPath=h5}"></TextBlock>
                 </TextBlock.ToolTip>
             </TextBlock>
             <TextBox Grid.Column="3" Grid.Row="0" Text="{Binding Path=Suffix}"
-                     controls:TextBoxHelper.Watermark="Суффикс"></TextBox>
-            <TextBlock Grid.Column="0" Grid.Row="1" Text="Создавать:"></TextBlock>
+                     controls:TextBoxHelper.Watermark="{Binding Source={StaticResource Lang}, XPath=h6}"></TextBox>
+            <TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding Source={StaticResource Lang}, XPath=h7}"></TextBlock>
             <ComboBox Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="1" Name="CbIsInstanceParameterCreate"
                       SelectedIndex="{Binding Path=IsInstanceParameterCreate}"></ComboBox>
         </Grid>
         <!-- nested parameters -->
         <TextBlock Grid.Row="1" Grid.Column="0" TextWrapping="Wrap"
-                   Text="Параметры вложенных экземпляров семейств:"></TextBlock>
+                   Text="{Binding Source={StaticResource Lang}, XPath=h8}"></TextBlock>
         <ListView Grid.Column="0" Grid.Row="2" ItemsSource="{Binding Path=NestedFamilyInstanceModels}"
                   BorderThickness="1" BorderBrush="{DynamicResource AccentColorBrush}"
                   ItemContainerStyle="{StaticResource ListViewItemNoBackground}">
@@ -243,13 +244,13 @@
                                 </Rectangle>
                                 <Button.ToolTip>
                                     <TextBlock FontSize="14" TextWrapping="Wrap" MaxWidth="350"
-                                               Text="Выделить экземпляр семейства на текущем виде"></TextBlock>
+                                               Text="{Binding Source={StaticResource Lang}, XPath=h9}"></TextBlock>
                                 </Button.ToolTip>
                             </Button>
                             <TextBlock Margin="2" Text="{Binding Path=Name, Mode=OneWay}" VerticalAlignment="Center"></TextBlock>
                         </StackPanel>
                         <Expander Grid.Row="1" Margin="10 0 0 0" BorderThickness="0" Padding="0"
-                                  Header="Параметры экземпляра" Background="{DynamicResource GrayBrush8}">
+                                  Header="{Binding Source={StaticResource Lang}, XPath=h10}" Background="{DynamicResource GrayBrush8}">
                             <ListView ItemsSource="{Binding Path=InstanceParameters}" BorderThickness="0"
                                       ItemTemplate="{StaticResource ParameterTemplate}" Margin="0"
                                       Grid.IsSharedSizeScope="True">
@@ -261,7 +262,7 @@
                             </ListView>
                         </Expander>
                         <Expander Grid.Row="2" Margin="10 0 0 0" BorderThickness="0" Padding="0"
-                                  Header="Параметры типа" Background="{DynamicResource GrayBrush8}">
+                                  Header="{Binding Source={StaticResource Lang}, XPath=h11}" Background="{DynamicResource GrayBrush8}">
                             <ListView ItemsSource="{Binding Path=TypeParameters}" BorderThickness="0"
                                       ItemTemplate="{StaticResource ParameterTemplate}" Margin="0"
                                       Grid.IsSharedSizeScope="True">
@@ -289,7 +290,7 @@
                 </Rectangle>
                 <Button.ToolTip>
                     <TextBlock FontSize="14" TextWrapping="Wrap" MaxWidth="350"
-                               Text="Создание в текущем семействе новых параметров с привязкой значения к выбранным параметрам вложенных семейств"></TextBlock>
+                               Text="{Binding Source={StaticResource Lang}, XPath=h12}"></TextBlock>
                 </Button.ToolTip>
             </Button>
             <Button MinWidth="0" Padding="0" Width="30" Height="30"
@@ -303,7 +304,7 @@
                 </Rectangle>
                 <Button.ToolTip>
                     <TextBlock FontSize="14" TextWrapping="Wrap" MaxWidth="350"
-                               Text="Удаление связи для выбранных параметров вложенных экземпляров семейств. Параметр, с которым были связаны выбранные параметры, при этом не удаляется из текущего семейства семейства"></TextBlock>
+                               Text="{Binding Source={StaticResource Lang}, XPath=h13}"></TextBlock>
                 </Button.ToolTip>
             </Button>
             <Button MinWidth="0" Padding="0" Width="30" Height="30"
@@ -317,13 +318,13 @@
                 </Rectangle>
                 <Button.ToolTip>
                     <TextBlock FontSize="14" TextWrapping="Wrap" MaxWidth="350"
-                               Text="Удаление выбранных связанных параметров текущего семейства"></TextBlock>
+                               Text="{Binding Source={StaticResource Lang}, XPath=h14}"></TextBlock>
                 </Button.ToolTip>
             </Button>
         </StackPanel>
         <!-- associated parameters -->
         <TextBlock Grid.Row="1" Grid.Column="2" TextWrapping="Wrap"
-                   Text="Связанные параметры текущего семейства:"></TextBlock>
+                   Text="{Binding Source={StaticResource Lang}, XPath=h15}"></TextBlock>
         <ListView Grid.Row="2" Grid.Column="2" ItemsSource="{Binding Path=AssociatedParameters}"
                   BorderThickness="1" BorderBrush="{DynamicResource AccentColorBrush}"
                   Grid.IsSharedSizeScope="True">
@@ -352,7 +353,7 @@
                             </Rectangle>
                             <Button.ToolTip>
                                 <TextBlock FontSize="14" TextWrapping="Wrap" MaxWidth="350"
-                                           Text="Выделить в списке вложенных экземпляров семейств все параметры, связанные с данным параметром текущего семейства"></TextBlock>
+                                           Text="{Binding Source={StaticResource Lang}, XPath=h16}"></TextBlock>
                             </Button.ToolTip>
                         </Button>
                         <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Path=Name}" Margin="2"></TextBlock>
@@ -362,7 +363,7 @@
                                       VerticalAlignment="Center" MinHeight="0" HorizontalAlignment="Left"
                                       FontSize="10" BorderThickness="0" Padding="0" Margin="2 1 1 1"></ComboBox>
                             <TextBlock FontSize="10" Margin="5 1 1 1">
-                                <Run Text="Количество связанных параметров вложенных семейств:"></Run>
+                                <Run Text="{Binding Source={StaticResource Lang}, XPath=h17}"></Run>
                                 <Run Text="{Binding Path=NestedFamilyParameters.Count, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"></Run>
                             </TextBlock>
                         </StackPanel>

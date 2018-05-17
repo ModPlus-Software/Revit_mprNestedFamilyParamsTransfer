@@ -4,6 +4,7 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using mprNestedFamilyParamsTransfer.Annotations;
 using mprNestedFamilyParamsTransfer.Helpers;
+using ModPlusAPI;
 using ModPlusAPI.Windows;
 
 namespace mprNestedFamilyParamsTransfer
@@ -11,6 +12,8 @@ namespace mprNestedFamilyParamsTransfer
     [Transaction(TransactionMode.Manual)]
     public class Command : IExternalCommand
     {
+        private const string LangItem = "mprNestedFamilyParamsTransfer";
+
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             try
@@ -20,7 +23,7 @@ namespace mprNestedFamilyParamsTransfer
                 var doc = commandData.Application.ActiveUIDocument.Document;
                 if (!doc.IsFamilyDocument)
                 {
-                    MessageBox.Show("Запуск плагина доступен только в редакторе семейств");
+                    MessageBox.Show(Language.GetItem(LangItem, "msg1")); // Запуск функции доступен только в редакторе семейств
                     return Result.Cancelled;
                 }
                 var fm = doc.FamilyManager;
@@ -32,22 +35,20 @@ namespace mprNestedFamilyParamsTransfer
                         TaskDialog taskDialog = new TaskDialog("ModPlus")
                         {
                             MainContent =
-                                "Внимание! В текущем семействе отсутствуют типоразмеры! Корректная работа Функции не возможна!" +
+                                Language.GetItem(LangItem, "msg2") + // "Внимание! В текущем семействе отсутствуют типоразмеры! Корректная работа Функции не возможна!" +
                                 Environment.NewLine +
-                                "Вы можете выбрать вариант \"Продолжить и создать типоразмер\" - тогда Функция создаст типоразмер с именем: " +
+                                Language.GetItem(LangItem, "msg3") + " " + // Вы можете выбрать вариант \"Продолжить и создать типоразмер\" - тогда Функция создаст типоразмер с именем:
                                 doc.Title + Environment.NewLine +
-                                "Если Вы не хотите создавать новый типоразмер, то Вам нужно выполнить следующие действия:" +
+                                Language.GetItem(LangItem, "msg4") + //"Если Вы не хотите создавать новый типоразмер, то Вам нужно выполнить следующие действия:" +
                                 Environment.NewLine +
-                                "1. Выберите вариант \"Вернуться в редактор семейства\"" + Environment.NewLine +
-                                "2. Откройте стандартное диалоговое окно \"Типоразмеры в семействе\"" +
+                                Language.GetItem(LangItem, "msg5") + Environment.NewLine + // 1. Выберите вариант \"Вернуться в редактор семейства\"
+                                Language.GetItem(LangItem, "msg6") + // 2. Откройте стандартное диалоговое окно \"Типоразмеры в семействе\"
                                 Environment.NewLine +
-                                "3. Создайте новый типоразмер и сразу его удалите" + Environment.NewLine +
-                                "4. Еще раз запустите данную Функцию"
+                                Language.GetItem(LangItem, "msg7") + Environment.NewLine + // 3. Создайте новый типоразмер и сразу его удалите
+                                Language.GetItem(LangItem, "msg8") //4. Еще раз запустите данную Функцию
                         };
-                        taskDialog.AddCommandLink(TaskDialogCommandLinkId.CommandLink1,
-                            "Продолжить и создать типоразмер");
-                        taskDialog.AddCommandLink(TaskDialogCommandLinkId.CommandLink2,
-                            "Вернуться в редактор семейства");
+                        taskDialog.AddCommandLink(TaskDialogCommandLinkId.CommandLink1, Language.GetItem(LangItem, "c1")); // "Продолжить и создать типоразмер"
+                        taskDialog.AddCommandLink(TaskDialogCommandLinkId.CommandLink2, Language.GetItem(LangItem, "c2") ); // Вернуться в редактор семейства
                         var result = taskDialog.Show();
                         if (result == TaskDialogResult.CommandLink1)
                         {

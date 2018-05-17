@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // Общие сведения об этой сборке предоставляются следующим набором
 // набора атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
-[assembly: AssemblyTitle("mprNestedFamilyParamsTransfer_2016")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("mprNestedFamilyParamsTransfer")]
+[assembly: AssemblyDescription("2016")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Hewlett-Packard")]
-[assembly: AssemblyProduct("mprNestedFamilyParamsTransfer_2016")]
-[assembly: AssemblyCopyright("Copyright © Hewlett-Packard 2018")]
+[assembly: AssemblyCompany("modplus.org")]
+[assembly: AssemblyProduct("ModPlus")]
+[assembly: AssemblyCopyright("Copyright © ModPlus")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

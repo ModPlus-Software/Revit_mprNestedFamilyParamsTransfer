@@ -6,15 +6,18 @@ using MahApps.Metro.Controls;
 
 namespace mprNestedFamilyParamsTransfer
 {
-    public partial class MainWindow 
+    public partial class MainWindow
     {
+        private const string LangItem = "mprNestedFamilyParamsTransfer";
+
         public MainWindow()
         {
             InitializeComponent();
-            Title = "Nested Family InstanceParameters Transfer";
+            Title = ModPlusAPI.Language.GetItem(LangItem, "h1");
             CbIsInstanceParameterCreate.ItemsSource = new[]
             {
-                "Параметр типа", "Параметр экземпляра"
+               ModPlusAPI.Language.GetItem(LangItem, "p1"), //  "Параметр типа",
+               ModPlusAPI.Language.GetItem(LangItem, "p2") //"Параметр экземпляра"
             };
         }
         private void OnMouseLeftButtonDown(object sender, MouseEventArgs e)

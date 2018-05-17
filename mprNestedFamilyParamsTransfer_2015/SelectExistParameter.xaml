@@ -9,10 +9,12 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/ModPlusAPI;component/Windows/WinResources/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <XmlDataProvider x:Key="Lang" Source="E:/ModPlus/Languages/en-US.xml" XPath="ModPlus/mprNestedFamilyParamsTransfer" />
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
@@ -22,17 +24,18 @@
             <ColumnDefinition Width="Auto"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="Параметр семейства:"></TextBlock>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Source={StaticResource Lang}, XPath=h19}"></TextBlock>
         <TextBlock Grid.Row="0" Grid.Column="1" Name="TbParameterName"></TextBlock>
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="Тип параметра:"></TextBlock>
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding Source={StaticResource Lang}, XPath=h20}"></TextBlock>
         <TextBlock Grid.Row="1" Grid.Column="1" Name="TbParameterType"></TextBlock>
-        <ListBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+        <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Source={StaticResource Lang}, XPath=h21}"></TextBlock>
+        <ListBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
                  Name="LbParameters" BorderThickness="1" BorderBrush="{DynamicResource AccentColorBrush}"
                  Width="400" Height="300"></ListBox>
-        <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal"
+        <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal"
                     HorizontalAlignment="Right">
-            <Button Content="Ok" Name="BtAccept" Click="BtAccept_OnClick"></Button>
-            <Button Content="Cancel" Name="BtCancel" Click="BtCancel_OnClick"></Button>
+            <Button Content="{Binding Source={StaticResource Lang}, XPath=ok}" Name="BtAccept" Click="BtAccept_OnClick"></Button>
+            <Button Content="{Binding Source={StaticResource Lang}, XPath=cancel}" Name="BtCancel" Click="BtCancel_OnClick"></Button>
         </StackPanel>
     </Grid>
 </mpc:BaseMetroWindow>

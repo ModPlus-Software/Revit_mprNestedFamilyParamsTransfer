@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -17,6 +16,8 @@ namespace mprNestedFamilyParamsTransfer
 {
     public class MainViewModel : VmBase
     {
+        private const string LangItem = "mprNestedFamilyParamsTransfer";
+
         #region Constructor
 
         public MainViewModel()
@@ -226,7 +227,7 @@ namespace mprNestedFamilyParamsTransfer
                         }
                         catch
                         {
-                            MessageBox.Show($"Невозможно удалить параметр {p.FamilyParameter.Definition.Name}",
+                            MessageBox.Show($"{Language.GetItem(LangItem, "msg9")} {p.FamilyParameter.Definition.Name}", // Can not remove parameter
                                 MessageBoxIcon.Alert);
                             p.NestedFamilyParameters.Clear();
                             p.IsUnliked = true;
@@ -415,17 +416,18 @@ namespace mprNestedFamilyParamsTransfer
                         break;
                 }
         }
+
         [CanBeNull]
         private FamilyParameter CheckForExistAllowableParameter(Parameter p)
         {
             TaskDialog taskDialog = new TaskDialog("ModPlus")
             {
-                MainInstruction = $"В текущем семействе уже существует параметр с именем {p.Definition.Name}" +
+                MainInstruction = $"{Language.GetItem(LangItem, "msg10")} {p.Definition.Name}" + // В текущем семействе уже существует параметр с именем
                                   Environment.NewLine +
-                                  "Выберите дальнейшее действие:"
+                                  Language.GetItem(LangItem, "msg11") // Выберите дальнейшее действие:
             };
-            taskDialog.AddCommandLink(TaskDialogCommandLinkId.CommandLink1, "Установить связь с существующим параметром");
-            taskDialog.AddCommandLink(TaskDialogCommandLinkId.CommandLink2, "Создать новый параметр");
+            taskDialog.AddCommandLink(TaskDialogCommandLinkId.CommandLink1, Language.GetItem(LangItem, "c3")); // "Установить связь с существующим параметром"
+            taskDialog.AddCommandLink(TaskDialogCommandLinkId.CommandLink2, Language.GetItem(LangItem, "c4")); // "Создать новый параметр"
             var fm = RevitInterop.Document.FamilyManager;
             foreach (FamilyParameter fmParameter in fm.Parameters)
             {
@@ -470,27 +472,6 @@ namespace mprNestedFamilyParamsTransfer
         {
             try
             {
-                //using (Transaction tr = new Transaction(RevitInterop.Document, "Associate parameter"))
-                //{
-                //    tr.Start();
-                //    var fm1 = RevitInterop.Document.FamilyManager;
-
-                //    foreach (FamilyParameter fmParameter in fm1.GetParameters())
-                //    {
-                //        if (fmParameter.Id.IntegerValue == -1010103)
-                //        {
-                //            if (!fm1.CurrentType.HasValue(fmParameter))
-                //                fm1.Set(fmParameter, "1");
-                //            fm1.AssociateElementParameterToFamilyParameter(nestedFamilyParameterModel.Parameter,
-                //                fmParameter);
-
-                //        }
-                //    }
-
-                //    tr.Commit();
-                //}
-
-                //return;
                 SelectExistParameter selectExistParameter = new SelectExistParameter(nestedFamilyParameterModel.Parameter);
                 if (selectExistParameter.ShowDialog() == true)
                 {
@@ -562,7 +543,7 @@ namespace mprNestedFamilyParamsTransfer
             }
         }
         /// <summary>Получить текущее значение параметра семейства</summary>
-        private object GetFamilyParameterValue(FamilyManager fm, FamilyParameter familyParameter)
+        private static object GetFamilyParameterValue(FamilyManager fm, FamilyParameter familyParameter)
         {
             switch (familyParameter.StorageType)
             {
@@ -575,7 +556,7 @@ namespace mprNestedFamilyParamsTransfer
             return null;
         }
         /// <summary>Установить временное значение-заглушку для параметра семейства</summary>
-        private void SetTemporaryValueToFamilyParameter(FamilyManager fm, FamilyParameter familyParameter)
+        private static void SetTemporaryValueToFamilyParameter(FamilyManager fm, FamilyParameter familyParameter)
         {
             switch (familyParameter.StorageType)
             {
@@ -586,7 +567,7 @@ namespace mprNestedFamilyParamsTransfer
             }
         }
         /// <summary>Установить сохраненное значение для параметра семейства</summary>
-        private void SetSavedValueToFamilyParameter(object value, FamilyManager fm, FamilyParameter familyParameter)
+        private static void SetSavedValueToFamilyParameter(object value, FamilyManager fm, FamilyParameter familyParameter)
         {
             switch (familyParameter.StorageType)
             {

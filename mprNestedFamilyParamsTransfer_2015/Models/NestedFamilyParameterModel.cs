@@ -1,12 +1,15 @@
 ﻿using System.Windows.Input;
 using Autodesk.Revit.DB;
 using mprNestedFamilyParamsTransfer.Helpers;
+using ModPlusAPI;
 
 namespace mprNestedFamilyParamsTransfer.Models
 {
     /// <summary>Параметр вложенного семейства</summary>
     public class NestedFamilyParameterModel : VmBase
     {
+        private const string LangItem = "mprNestedFamilyParamsTransfer";
+
         public NestedFamilyParameterModel(
             Parameter parameter,
             NestedFamilyInstanceModel nestedFamilyInstance, 
@@ -38,7 +41,10 @@ namespace mprNestedFamilyParamsTransfer.Models
                     {
                         case StorageType.String: return Parameter.AsString();
                         case StorageType.Double: return Parameter.AsValueString();
-                        case StorageType.Integer: return Parameter.AsInteger() == 0 ? "Выкл" : "Вкл";
+                        case StorageType.Integer:
+                            return Parameter.AsInteger() == 0
+                                ? Language.GetItem(LangItem, "off") // "Выкл"
+                                : Language.GetItem(LangItem, "on"); //"Вкл";
                         case StorageType.ElementId: return RevitInterop.Document.GetElement(Parameter.AsElementId()).Name;
                     }
                 }

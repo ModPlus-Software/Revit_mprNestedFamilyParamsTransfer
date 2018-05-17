@@ -8,10 +8,12 @@ namespace mprNestedFamilyParamsTransfer
 {
     public partial class SelectExistParameter
     {
+        private const string LangItem = "mprNestedFamilyParamsTransfer";
+
         public SelectExistParameter(Parameter parameter)
         {
             InitializeComponent();
-            Title = "Назначение параметра семейства"; // Associate global parameter
+            Title = ModPlusAPI.Language.GetItem(LangItem, "h18"); //"Назначение параметра семейства"; 
             // get data from parameter
             TbParameterName.Text = parameter.Definition.Name;
             TbParameterType.Text = LabelUtils.GetLabelFor(parameter.Definition.ParameterType);
@@ -32,7 +34,8 @@ namespace mprNestedFamilyParamsTransfer
         {
             if (LbParameters.SelectedIndex == -1)
             {
-                ModPlusAPI.Windows.MessageBox.Show("Вы не выбрали параметр в списке!", MessageBoxIcon.Alert);
+                ModPlusAPI.Windows.MessageBox.Show(ModPlusAPI.Language.GetItem(LangItem, "msg12"),  //"Вы не выбрали параметр в списке!"
+                MessageBoxIcon.Alert);
                 return;
             }
             DialogResult = true;

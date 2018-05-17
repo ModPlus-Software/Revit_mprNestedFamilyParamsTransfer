@@ -224,7 +224,7 @@ namespace mprNestedFamilyParamsTransfer
                             // if no exception
                             AssociatedParameters.Remove(p);
                         }
-                        catch 
+                        catch
                         {
                             MessageBox.Show($"Невозможно удалить параметр {p.FamilyParameter.Definition.Name}",
                                 MessageBoxIcon.Alert);
@@ -470,6 +470,27 @@ namespace mprNestedFamilyParamsTransfer
         {
             try
             {
+                //using (Transaction tr = new Transaction(RevitInterop.Document, "Associate parameter"))
+                //{
+                //    tr.Start();
+                //    var fm1 = RevitInterop.Document.FamilyManager;
+
+                //    foreach (FamilyParameter fmParameter in fm1.GetParameters())
+                //    {
+                //        if (fmParameter.Id.IntegerValue == -1010103)
+                //        {
+                //            if (!fm1.CurrentType.HasValue(fmParameter))
+                //                fm1.Set(fmParameter, "1");
+                //            fm1.AssociateElementParameterToFamilyParameter(nestedFamilyParameterModel.Parameter,
+                //                fmParameter);
+
+                //        }
+                //    }
+
+                //    tr.Commit();
+                //}
+
+                //return;
                 SelectExistParameter selectExistParameter = new SelectExistParameter(nestedFamilyParameterModel.Parameter);
                 if (selectExistParameter.ShowDialog() == true)
                 {
@@ -485,6 +506,9 @@ namespace mprNestedFamilyParamsTransfer
                         {
                             if (parameterModel.FamilyParameter.Id.IntegerValue == id)
                             {
+                                if (parameterModel.FamilyParameter.StorageType == StorageType.Double &&
+                                   !fm.CurrentType.HasValue(parameterModel.FamilyParameter))
+                                    SetValueForCreatedParameter(nestedFamilyParameterModel, fm, parameterModel.FamilyParameter);
                                 fm.AssociateElementParameterToFamilyParameter(nestedFamilyParameterModel.Parameter, parameterModel.FamilyParameter);
                                 parameterModel.IsUnliked = false;
                                 parameterModel.NestedFamilyParameters.Add(nestedFamilyParameterModel);
@@ -500,7 +524,10 @@ namespace mprNestedFamilyParamsTransfer
                             {
                                 if (fmParameter.Id.IntegerValue == id)
                                 {
-                                    //fm.AssociateElementParameterToFamilyParameter(nestedFamilyParameterModel.Parameter, fmParameter);
+                                    var oldValue = GetFamilyParameterValue(fm, fmParameter);
+                                    SetTemporaryValueToFamilyParameter(fm, fmParameter);
+                                    fm.AssociateElementParameterToFamilyParameter(nestedFamilyParameterModel.Parameter, fmParameter);
+                                    SetSavedValueToFamilyParameter(oldValue, fm, fmParameter);
                                     associatedParameterModel = new AssociatedParameterModel(fmParameter, nestedFamilyParameterModel);
                                     nestedFamilyParameterModel.AssociatedParameter = associatedParameterModel;
                                     nestedFamilyParameterModel.IsLinked = true;
@@ -508,9 +535,6 @@ namespace mprNestedFamilyParamsTransfer
                                     break;
                                 }
                             }
-                            if (associatedParameterModel != null)
-                                fm.AssociateElementParameterToFamilyParameter(nestedFamilyParameterModel.Parameter, associatedParameterModel.FamilyParameter);
-
                         }
                         // Искать такие-же параметры в любом случае (создали ли новый или привязали к существующему)
                         if (!nestedFamilyParameterModel.IsInstance && associatedParameterModel != null)
@@ -535,11 +559,57 @@ namespace mprNestedFamilyParamsTransfer
             catch (Exception exception)
             {
                 ExceptionBox.Show(exception);
-                Debug.Print(exception.Message);
-                Debug.Print(exception.StackTrace);
-                Debug.Print(exception.Source);
-                Debug.Print(exception.InnerException?.Message);
-                Debug.Print(exception.InnerException?.StackTrace);
+            }
+        }
+        /// <summary>Получить текущее значение параметра семейства</summary>
+        private object GetFamilyParameterValue(FamilyManager fm, FamilyParameter familyParameter)
+        {
+            switch (familyParameter.StorageType)
+            {
+                case StorageType.Double: return fm.CurrentType.AsDouble(familyParameter);
+                case StorageType.ElementId: return fm.CurrentType.AsElementId(familyParameter);
+                case StorageType.Integer: return fm.CurrentType.AsInteger(familyParameter);
+                case StorageType.String: return fm.CurrentType.AsString(familyParameter);
+            }
+
+            return null;
+        }
+        /// <summary>Установить временное значение-заглушку для параметра семейства</summary>
+        private void SetTemporaryValueToFamilyParameter(FamilyManager fm, FamilyParameter familyParameter)
+        {
+            switch (familyParameter.StorageType)
+            {
+                case StorageType.Double: fm.Set(familyParameter, 1); break;
+                case StorageType.ElementId: fm.Set(familyParameter, ElementId.InvalidElementId); break;
+                case StorageType.Integer: fm.Set(familyParameter, 1); break;
+                case StorageType.String: fm.Set(familyParameter, "temp"); break;
+            }
+        }
+        /// <summary>Установить сохраненное значение для параметра семейства</summary>
+        private void SetSavedValueToFamilyParameter(object value, FamilyManager fm, FamilyParameter familyParameter)
+        {
+            switch (familyParameter.StorageType)
+            {
+                case StorageType.Double:
+                    if (value != null)
+                        fm.Set(familyParameter, (double)value);
+                    else fm.Set(familyParameter, 0);
+                    break;
+                case StorageType.ElementId:
+                    if (value != null)
+                        fm.Set(familyParameter, (ElementId)value);
+                    else fm.Set(familyParameter, ElementId.InvalidElementId);
+                    break;
+                case StorageType.Integer:
+                    if (value != null)
+                        fm.Set(familyParameter, (int)value);
+                    else fm.Set(familyParameter, 0);
+                    break;
+                case StorageType.String:
+                    if (value != null)
+                        fm.Set(familyParameter, (string)value);
+                    else fm.Set(familyParameter, string.Empty);
+                    break;
             }
         }
 

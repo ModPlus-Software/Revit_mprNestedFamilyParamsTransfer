@@ -51,10 +51,13 @@ namespace mprNestedFamilyParamsTransfer
                         var result = taskDialog.Show();
                         if (result == TaskDialogResult.CommandLink1)
                         {
-                            RevitInterop.RevitEvent.Run(() =>
+                            using (Transaction tr = new Transaction(doc, "Create Type"))
                             {
+                                tr.Start();
                                 fm.NewType(doc.Title);
-                            }, false);
+                                tr.Commit();
+                            }
+                            
                         }
                         else return Result.Succeeded;
                     }

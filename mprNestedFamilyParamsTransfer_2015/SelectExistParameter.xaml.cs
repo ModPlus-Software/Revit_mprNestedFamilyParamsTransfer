@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 using Autodesk.Revit.DB;
 using mprNestedFamilyParamsTransfer.Helpers;
@@ -19,15 +21,22 @@ namespace mprNestedFamilyParamsTransfer
             TbParameterType.Text = LabelUtils.GetLabelFor(parameter.Definition.ParameterType);
             // get allowable parameters
             var fm = RevitInterop.Document.FamilyManager;
+            // sort
+            List<Tuple<string, int>> parameters = new List<Tuple<string, int>>();
             foreach (FamilyParameter fmParameter in fm.Parameters)
             {
                 if (fmParameter.Definition.ParameterType == parameter.Definition.ParameterType)
-                    LbParameters.Items.Add(new ListBoxItem
-                    {
-                        Content = fmParameter.Definition.Name,
-                        Tag = fmParameter.Id.IntegerValue
-                    });
+                    parameters.Add(new Tuple<string, int>(fmParameter.Definition.Name, fmParameter.Id.IntegerValue));
             }
+            parameters.Sort((i1,i2) => string.Compare(i1.Item1, i2.Item1, StringComparison.Ordinal));
+            parameters.ForEach(p =>
+            {
+                LbParameters.Items.Add(new ListBoxItem
+                {
+                    Content = p.Item1,
+                    Tag = p.Item2
+                });
+            });
         }
 
         private void BtAccept_OnClick(object sender, RoutedEventArgs e)

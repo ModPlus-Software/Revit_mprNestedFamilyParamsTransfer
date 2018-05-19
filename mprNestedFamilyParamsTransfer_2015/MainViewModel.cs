@@ -448,7 +448,7 @@ namespace mprNestedFamilyParamsTransfer
 
         private string GetNameForNewFamilyParameter(string pName)
         {
-            var newName = Prefix + pName + Suffix;
+            var newName = RemoveNotAllowableSymbols(Prefix + pName + Suffix);
             var baseName = newName;
             var index = 1;
             while (HasSameNameParameter(newName))
@@ -457,6 +457,20 @@ namespace mprNestedFamilyParamsTransfer
                 index++;
             }
             return newName;
+        }
+
+        private string RemoveNotAllowableSymbols(string name)
+        {
+            var bracketsOpen = new[] { "{", "[", "<", };
+            var bracketsClose = new[] { "}", "]", ">" };
+            var symbols = new[] { "\\", ":", "|", ";", "?", "`", "~" };
+            foreach (var s in bracketsOpen)
+                name = name.Replace(s, "(");
+            foreach (var s in bracketsClose)
+                name = name.Replace(s, ")");
+            foreach (var s in symbols)
+                name = name.Replace(s, "");
+            return name;
         }
 
         private bool HasSameNameParameter(string name)

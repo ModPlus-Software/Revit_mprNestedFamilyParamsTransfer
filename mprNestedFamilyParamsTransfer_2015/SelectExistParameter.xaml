@@ -1,15 +1,14 @@
-﻿<mpc:BaseMetroWindow xmlns:mpc="clr-namespace:ModPlusAPI.Windows.Mpc;assembly=ModPlusAPI"
-                     x:Class="mprNestedFamilyParamsTransfer.SelectExistParameter"
-                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                     WindowStartupLocation="CenterScreen"
-                     ResizeMode="NoResize" SizeToContent="WidthAndHeight">
+﻿<mps:ModPlusWindow x:Class="mprNestedFamilyParamsTransfer.SelectExistParameter"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:mps="https://modplus.org/winfx/xaml/controls"
+                   ResizeMode="NoResize" SizeToContent="WidthAndHeight">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/ModPlusAPI;component/Windows/WinResources/Styles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/ModPlusStyle;component/Styles/Controls.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            <XmlDataProvider x:Key="Lang" Source="E:/ModPlus/Languages/en-US.xml" XPath="ModPlus/mprNestedFamilyParamsTransfer" />
+            <XmlDataProvider x:Key="Lang" Source="D:/ModPlus/Languages/en-US.xml" XPath="ModPlus/mprNestedFamilyParamsTransfer" />
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
@@ -24,18 +23,22 @@
             <ColumnDefinition Width="Auto"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Source={StaticResource Lang}, XPath=h19}"></TextBlock>
-        <TextBlock Grid.Row="0" Grid.Column="1" Name="TbParameterName"></TextBlock>
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding Source={StaticResource Lang}, XPath=h20}"></TextBlock>
-        <TextBlock Grid.Row="1" Grid.Column="1" Name="TbParameterType"></TextBlock>
-        <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Source={StaticResource Lang}, XPath=h21}"></TextBlock>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Source={StaticResource Lang}, XPath=h19}"
+                   Margin="{DynamicResource ModPlusDefaultMargin}"></TextBlock>
+        <TextBlock Grid.Row="0" Grid.Column="1" Name="TbParameterName"
+                   Margin="{DynamicResource ModPlusDefaultMargin}"></TextBlock>
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding Source={StaticResource Lang}, XPath=h20}"
+                   Margin="{DynamicResource ModPlusDefaultMargin}"></TextBlock>
+        <TextBlock Grid.Row="1" Grid.Column="1" Name="TbParameterType"
+                   Margin="{DynamicResource ModPlusDefaultMargin}"></TextBlock>
+        <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Source={StaticResource Lang}, XPath=h21}"
+                   Margin="{DynamicResource ModPlusDefaultMargin}"></TextBlock>
         <ListBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
-                 Name="LbParameters" BorderThickness="1" BorderBrush="{DynamicResource AccentColorBrush}"
-                 Width="400" Height="300"></ListBox>
+                 Name="LbParameters" Width="400" Height="300"></ListBox>
         <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal"
                     HorizontalAlignment="Right">
             <Button Content="{Binding Source={StaticResource Lang}, XPath=ok}" Name="BtAccept" Click="BtAccept_OnClick"></Button>
             <Button Content="{Binding Source={StaticResource Lang}, XPath=cancel}" Name="BtCancel" Click="BtCancel_OnClick"></Button>
         </StackPanel>
     </Grid>
-</mpc:BaseMetroWindow>
+</mps:ModPlusWindow>

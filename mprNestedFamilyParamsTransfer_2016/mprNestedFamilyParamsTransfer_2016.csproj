@@ -31,12 +31,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MahApps.Metro">
-      <HintPath>..\..\..\..\..\..\..\ModPlus\Extensions\MahApps.Metro.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="ModPlusAPI">
       <HintPath>..\..\..\..\..\..\..\ModPlus\Extensions\ModPlusAPI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ModPlusStyle">
+      <HintPath>..\..\..\..\ModPlus\Extensions\ModPlusStyle.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PresentationCore" />
@@ -84,6 +84,9 @@
     </Compile>
     <Compile Include="..\mprNestedFamilyParamsTransfer_2015\Models\NestedFamilyParameterModel.cs">
       <Link>Models\NestedFamilyParameterModel.cs</Link>
+    </Compile>
+    <Compile Include="..\mprNestedFamilyParamsTransfer_2015\Properties\AssemblyInfoCommon.cs">
+      <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
     <Compile Include="..\mprNestedFamilyParamsTransfer_2015\SelectExistParameter.xaml.cs">
       <Link>SelectExistParameter.xaml.cs</Link>

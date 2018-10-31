@@ -1,11 +1,11 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
-using MahApps.Metro.Controls;
-
-namespace mprNestedFamilyParamsTransfer
+﻿namespace mprNestedFamilyParamsTransfer
 {
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Input;
+    using System.Windows.Media;
+    using ModPlusAPI.Windows.Helpers;
+
     public partial class MainWindow
     {
         private const string LangItem = "mprNestedFamilyParamsTransfer";

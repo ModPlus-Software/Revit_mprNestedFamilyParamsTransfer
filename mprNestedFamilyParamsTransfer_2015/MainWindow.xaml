@@ -53,6 +53,9 @@
                           Fill="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Button}, Path=Foreground}" />
                 </Canvas>
             </Viewbox>
+
+            <XmlDataProvider x:Key="Lang" Source="E:/ModPlus/Languages/en-US.xml" XPath="ModPlus/mprNestedFamilyParamsTransfer" />
+
             <DataTemplate x:Key="ParameterTemplate" DataType="{x:Type models:NestedFamilyParameterModel}">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -67,7 +70,7 @@
                                PreviewMouseLeftButtonDown="OnMouseLeftButtonDown"></TextBlock>
                     <TextBlock Grid.Row="1" Grid.Column="0" FontSize="10" Margin="5 2 2 2"
                                PreviewMouseLeftButtonDown="OnMouseLeftButtonDown">
-                        <Run Text="Значение параметра:"></Run>
+                        <Run Text="{Binding Source={StaticResource Lang}, XPath=h22}"></Run>
                         <Run Text="{Binding Path=DisplayValue, Mode=OneWay}"></Run>
                     </TextBlock>
                     <Button Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Margin="0"
@@ -78,7 +81,7 @@
                             ToolTipService.ShowDuration="15000"
                             Command="{Binding Path=AssociateToExistFamilyParameterCommand}"
                             Content="{StaticResource LinkVariant}"
-                            ToolTip="Связать параметр с существующим параметром текущего семейства">
+                            ToolTip="{Binding Source={StaticResource Lang}, XPath=h23}">
                     </Button>
                     <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Foreground="{DynamicResource SuccessBrush}"
                             Width="24" Height="24" Margin="0" MinWidth="0" Padding="0"
@@ -87,7 +90,7 @@
                             Content="{StaticResource Link}">
                         <Button.ToolTip>
                             <TextBlock>
-                                <Run Text="Связанный параметр текущего семейства:"></Run>
+                                <Run Text="{Binding Source={StaticResource Lang}, XPath=h24}"></Run>
                                 <Run Text="{Binding Path=AssociatedParameter.Name, Mode=OneWay}"></Run>
                             </TextBlock>
                         </Button.ToolTip>
@@ -95,7 +98,7 @@
 
                 </Grid>
             </DataTemplate>
-            <XmlDataProvider x:Key="Lang" Source="D:/ModPlus/Languages/en-US.xml" XPath="ModPlus/mprNestedFamilyParamsTransfer" />
+            
         </ResourceDictionary>
     </Window.Resources>
     <Window.DataContext>

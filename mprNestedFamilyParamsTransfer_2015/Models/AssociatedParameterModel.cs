@@ -17,7 +17,7 @@ namespace mprNestedFamilyParamsTransfer.Models
             
             _isInstanceParameter = familyParameter.IsInstance ? 1 : 0;
             // commands
-            SelectNestedParamenetrsCommand = new RelayCommand(SelectNestedParameters);
+            SelectNestedParametersCommand = new RelayCommand(SelectNestedParameters);
         }
 
         public FamilyParameter FamilyParameter;
@@ -74,7 +74,7 @@ namespace mprNestedFamilyParamsTransfer.Models
             }
         }
 
-        public ICommand SelectNestedParamenetrsCommand { get; }
+        public ICommand SelectNestedParametersCommand { get; }
         private bool _isAllSelected;
         private void SelectNestedParameters(object o)
         {

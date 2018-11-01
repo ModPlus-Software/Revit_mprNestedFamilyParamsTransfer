@@ -46,5 +46,12 @@
                 return parent;
             return FindParent<T>(parentObject);
         }
+
+        private void UIElement_OnPreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            NestedParametersScrollViewer.ScrollToVerticalOffset(NestedParametersScrollViewer.VerticalOffset - e.Delta);
+            e.Handled = true;
+
+        }
     }
 }

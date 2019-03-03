@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mprNestedFamilyParamsTransf
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mprNestedFamilyParamsTransfer_2019", "mprNestedFamilyParamsTransfer_2019\mprNestedFamilyParamsTransfer_2019.csproj", "{9E14DF3E-C5A6-47E3-8EE5-CC4D130D88E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mprNestedFamilyParamsTransfer_2020", "mprNestedFamilyParamsTransfer_2020\mprNestedFamilyParamsTransfer_2020.csproj", "{7830BD0D-9317-4416-B71A-CFD3C5984000}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{9E14DF3E-C5A6-47E3-8EE5-CC4D130D88E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E14DF3E-C5A6-47E3-8EE5-CC4D130D88E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E14DF3E-C5A6-47E3-8EE5-CC4D130D88E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7830BD0D-9317-4416-B71A-CFD3C5984000}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7830BD0D-9317-4416-B71A-CFD3C5984000}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7830BD0D-9317-4416-B71A-CFD3C5984000}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7830BD0D-9317-4416-B71A-CFD3C5984000}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

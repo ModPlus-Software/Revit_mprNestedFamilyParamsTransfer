@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Windows.Controls;
-using System.Windows.Input;
-using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
-using mprNestedFamilyParamsTransfer.Annotations;
-using mprNestedFamilyParamsTransfer.Helpers;
-using mprNestedFamilyParamsTransfer.Models;
-using ModPlusAPI;
-using ModPlusAPI.Windows;
-
-namespace mprNestedFamilyParamsTransfer
+﻿namespace mprNestedFamilyParamsTransfer
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Linq;
+    using System.Windows.Controls;
+    using System.Windows.Input;
+    using Autodesk.Revit.DB;
+    using Autodesk.Revit.UI;
+    using Helpers;
+    using Models;
+    using ModPlusAPI;
+    using ModPlusAPI.Annotations;
+    using ModPlusAPI.Windows;
+
     public class MainViewModel : VmBase
     {
         private const string LangItem = "mprNestedFamilyParamsTransfer";

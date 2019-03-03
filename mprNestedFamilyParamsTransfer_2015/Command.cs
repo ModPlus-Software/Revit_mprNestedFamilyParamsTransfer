@@ -1,14 +1,14 @@
-﻿using System;
-using Autodesk.Revit.Attributes;
-using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
-using mprNestedFamilyParamsTransfer.Annotations;
-using mprNestedFamilyParamsTransfer.Helpers;
-using ModPlusAPI;
-using ModPlusAPI.Windows;
-
-namespace mprNestedFamilyParamsTransfer
+﻿namespace mprNestedFamilyParamsTransfer
 {
+    using System;
+    using Autodesk.Revit.Attributes;
+    using Autodesk.Revit.DB;
+    using Autodesk.Revit.UI;
+    using Helpers;
+    using ModPlusAPI;
+    using ModPlusAPI.Annotations;
+    using ModPlusAPI.Windows;
+
     [Transaction(TransactionMode.Manual)]
     public class Command : IExternalCommand
     {
@@ -18,7 +18,7 @@ namespace mprNestedFamilyParamsTransfer
         {
             try
             {
-                ModPlusAPI.Statistic.SendCommandStarting(new Interface());
+                Statistic.SendCommandStarting(new ModPlusConnector());
 
                 var doc = commandData.Application.ActiveUIDocument.Document;
                 if (!doc.IsFamilyDocument)

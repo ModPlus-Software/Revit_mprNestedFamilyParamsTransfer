@@ -1,11 +1,14 @@
-﻿using System.Collections.ObjectModel;
-using System.Windows.Input;
-using Autodesk.Revit.DB;
-using mprNestedFamilyParamsTransfer.Helpers;
-
-namespace mprNestedFamilyParamsTransfer.Models
+﻿namespace mprNestedFamilyParamsTransfer.Models
 {
-    /// <summary>Связанный параметр в текущем семействе (параметр который используется в параметрах вложенных семейств)</summary>
+    using System.Collections.ObjectModel;
+    using System.Windows.Input;
+    using Autodesk.Revit.DB;
+    using Helpers;
+    using ModPlusAPI.Mvvm;
+
+    /// <summary>
+    /// Связанный параметр в текущем семействе (параметр который используется в параметрах вложенных семейств)
+    /// </summary>
     public class AssociatedParameterModel : VmBase
     {
         public AssociatedParameterModel(
@@ -16,6 +19,7 @@ namespace mprNestedFamilyParamsTransfer.Models
             NestedFamilyParameters = new ObservableCollection<NestedFamilyParameterModel> { nestedFamilyParameter };
             
             _isInstanceParameter = familyParameter.IsInstance ? 1 : 0;
+
             // commands
             SelectNestedParametersCommand = new RelayCommand(SelectNestedParameters);
         }
@@ -27,7 +31,7 @@ namespace mprNestedFamilyParamsTransfer.Models
         public string Name => FamilyParameter.Definition.Name;
 
         private bool _isSelected;
-        private bool _isUnliked;
+        private bool _isUnlinked;
         private int _isInstanceParameter;
 
         public bool IsSelected
@@ -35,47 +39,54 @@ namespace mprNestedFamilyParamsTransfer.Models
             get => _isSelected;
             set
             {
-                if (value == _isSelected) return;
+                if (value == _isSelected)
+                    return;
                 _isSelected = value;
                 OnPropertyChanged();
             }
         }
 
-        public bool IsUnliked
+        public bool IsUnlinked
         {
-            get => _isUnliked;
+            get => _isUnlinked;
             set
             {
-                if (value == _isUnliked) return;
-                _isUnliked = value;
+                if (value == _isUnlinked)
+                    return;
+                _isUnlinked = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(IsEnabled));
             }
         }
 
-        public bool IsEnabled => !IsUnliked;
+        public bool IsEnabled => !IsUnlinked;
 
         public int IsInstanceParameter
         {
             get => _isInstanceParameter;
             set
             {
-                if (value == _isInstanceParameter) return;
+                if (value == _isInstanceParameter)
+                    return;
                 _isInstanceParameter = value;
                 using (Transaction tr = new Transaction(RevitInterop.Document, "Change IsInstance parameter"))
                 {
                     tr.Start();
                     if (value == 1)
                         RevitInterop.Document.FamilyManager.MakeInstance(FamilyParameter);
-                    else RevitInterop.Document.FamilyManager.MakeType(FamilyParameter);
+                    else
+                        RevitInterop.Document.FamilyManager.MakeType(FamilyParameter);
                     tr.Commit();
                 }
+
                 OnPropertyChanged();
             }
         }
 
         public ICommand SelectNestedParametersCommand { get; }
+
         private bool _isAllSelected;
+
         private void SelectNestedParameters(object o)
         {
             if (_isAllSelected)

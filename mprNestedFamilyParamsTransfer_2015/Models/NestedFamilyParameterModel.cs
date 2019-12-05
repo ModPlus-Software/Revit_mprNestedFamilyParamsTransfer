@@ -1,10 +1,11 @@
-﻿using System.Windows.Input;
-using Autodesk.Revit.DB;
-using mprNestedFamilyParamsTransfer.Helpers;
-using ModPlusAPI;
-
-namespace mprNestedFamilyParamsTransfer.Models
+﻿namespace mprNestedFamilyParamsTransfer.Models
 {
+    using System.Windows.Input;
+    using Autodesk.Revit.DB;
+    using Helpers;
+    using ModPlusAPI;
+    using ModPlusAPI.Mvvm;
+
     /// <summary>Параметр вложенного семейства</summary>
     public class NestedFamilyParameterModel : VmBase
     {
@@ -44,7 +45,7 @@ namespace mprNestedFamilyParamsTransfer.Models
                         case StorageType.Integer:
                             return Parameter.AsInteger() == 0
                                 ? Language.GetItem(LangItem, "off") // "Выкл"
-                                : Language.GetItem(LangItem, "on"); //"Вкл";
+                                : Language.GetItem(LangItem, "on"); // "Вкл";
                         case StorageType.ElementId: return RevitInterop.Document.GetElement(Parameter.AsElementId()).Name;
                     }
                 }
@@ -54,13 +55,17 @@ namespace mprNestedFamilyParamsTransfer.Models
         }
 
         private bool _isLinked;
-        /// <summary>Есть ли связь этого параметра в текущем семействе (семейство, в котором запущена функция)</summary>
+        
+        /// <summary>
+        /// Есть ли связь этого параметра в текущем семействе (семейство, в котором запущена функция)
+        /// </summary>
         public bool IsLinked
         {
             get => _isLinked;
             set
             {
-                if (value == _isLinked) return;
+                if (value == _isLinked)
+                    return;
                 _isLinked = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(CanLink));
@@ -72,12 +77,14 @@ namespace mprNestedFamilyParamsTransfer.Models
         public AssociatedParameterModel AssociatedParameter { get; set; }
 
         private bool _isSelected;
+
         public bool IsSelected
         {
             get => _isSelected;
             set
             {
-                if (value == _isSelected) return;
+                if (value == _isSelected)
+                    return;
                 _isSelected = value;
                 if (AssociatedParameter != null)
                     AssociatedParameter.IsSelected = value;

@@ -12,6 +12,7 @@
     using Models;
     using ModPlusAPI;
     using ModPlusAPI.Annotations;
+    using ModPlusAPI.Mvvm;
     using ModPlusAPI.Windows;
 
     public class MainViewModel : VmBase
@@ -26,6 +27,7 @@
             RemoveLinksCommand = new RelayCommand(RemoveLink);
             DeleteParametersCommand = new RelayCommand(DeleteParameter);
             CreateParametersCommand = new RelayCommand(CreateParameters);
+
             // get families and parameters
             GetNestedFamilyInstances();
             GetAssociatedParameters();
@@ -35,18 +37,19 @@
         #region Properties
 
         public ObservableCollection<NestedFamilyInstanceModel> NestedFamilyInstanceModels { get; set; }
+
         public ObservableCollection<AssociatedParameterModel> AssociatedParameters { get; set; }
+
         public string Prefix { get; set; }
+
         public string Suffix { get; set; }
+
         /// <summary>0 - создавать параметр типа. 1 - создавать параметр экземпляра</summary>
         public int IsInstanceParameterCreate
         {
             get => int.TryParse(
-                UserConfigFile.GetValue(UserConfigFile.ConfigFileZone.Settings, "mprNestedFamilyParamsTransfer",
-                    nameof(IsInstanceParameterCreate)), out var i)
-                ? i
-                : 0;
-            set => UserConfigFile.SetValue(UserConfigFile.ConfigFileZone.Settings, "mprNestedFamilyParamsTransfer", nameof(IsInstanceParameterCreate), value.ToString(), true);
+                UserConfigFile.GetValue(LangItem, nameof(IsInstanceParameterCreate)), out var i) ? i : 0;
+            set => UserConfigFile.SetValue(LangItem, nameof(IsInstanceParameterCreate), value.ToString(), true);
         }
         #endregion
 
@@ -69,7 +72,7 @@
 
         private void GetAssociatedParameters()
         {
-            /* Парметры экземпляра могут быть связаны с разными параметрами текущего семейства
+            /* Параметры экземпляра могут быть связаны с разными параметрами текущего семейства
              * А вот параметры типа могут быть связаны только с одним параметром текущего семейства!
              */
             AssociatedParameters = new ObservableCollection<AssociatedParameterModel>();
@@ -82,18 +85,22 @@
                     if (associatedParameter != null)
                     {
                         // нужно найти параметр с которым уже может быть установлена связь, иначе создать новый
-                        if (!IsAlreadyUseAssociatedParameter(associatedParameter,
+                        if (!IsAlreadyUseAssociatedParameter(
+                            associatedParameter,
                             nestedFamilyInstanceParameter))
                         {
-                            var associatedParameterModel = new AssociatedParameterModel(associatedParameter,
+                            var associatedParameterModel = new AssociatedParameterModel(
+                                associatedParameter,
                                 nestedFamilyInstanceParameter);
                             AssociatedParameters.Add(associatedParameterModel);
+
                             // также параметру вложенного семейства сообщу об связанном параметре
                             nestedFamilyInstanceParameter.AssociatedParameter = associatedParameterModel;
                             nestedFamilyInstanceParameter.IsLinked = true;
                         }
                     }
                 }
+
                 foreach (var nestedFamilyInstanceParameter in nestedFamily.TypeParameters)
                 {
                     FamilyParameter associatedParameter = RevitInterop.Document.FamilyManager
@@ -101,12 +108,15 @@
                     if (associatedParameter != null)
                     {
                         // нужно найти параметр с которым уже может быть установлена связь, иначе создать новый
-                        if (!IsAlreadyUseAssociatedParameter(associatedParameter,
+                        if (!IsAlreadyUseAssociatedParameter(
+                            associatedParameter,
                             nestedFamilyInstanceParameter))
                         {
-                            var associatedParameterModel = new AssociatedParameterModel(associatedParameter,
+                            var associatedParameterModel = new AssociatedParameterModel(
+                                associatedParameter,
                                 nestedFamilyInstanceParameter);
                             AssociatedParameters.Add(associatedParameterModel);
+
                             // также параметру вложенного семейства сообщу об связанном параметре
                             nestedFamilyInstanceParameter.AssociatedParameter = associatedParameterModel;
                             nestedFamilyInstanceParameter.IsLinked = true;
@@ -130,6 +140,7 @@
                     return true;
                 }
             }
+
             return false;
         }
         #endregion
@@ -137,6 +148,7 @@
         #region Commands
 
         public ICommand RemoveLinksCommand { get; }
+
         /// <summary>Удалить связь, не удаляя параметр</summary>
         private void RemoveLink(object o)
         {
@@ -148,15 +160,18 @@
                 {
                     nestedFamilyInstanceModel.InstanceParameters.ForEach(p =>
                     {
-                        if (p.IsSelected && p.IsLinked) selectedInstanceParameters.Add(p);
+                        if (p.IsSelected && p.IsLinked)
+                            selectedInstanceParameters.Add(p);
                     });
                     nestedFamilyInstanceModel.TypeParameters.ForEach(p =>
                     {
-                        if (p.IsSelected && p.IsLinked) selectedTypeParameters.Add(p);
+                        if (p.IsSelected && p.IsLinked)
+                            selectedTypeParameters.Add(p);
                     });
                 }
 
                 if (selectedInstanceParameters.Any() || selectedTypeParameters.Any())
+                {
                     using (Transaction tr = new Transaction(RevitInterop.Document, "Remove links"))
                     {
                         tr.Start();
@@ -165,15 +180,17 @@
                             RevitInterop.Document.FamilyManager.AssociateElementParameterToFamilyParameter(p.Parameter, null);
                             p.AssociatedParameter.NestedFamilyParameters.Remove(p);
                             if (p.AssociatedParameter.NestedFamilyParameters.Count == 0)
-                                p.AssociatedParameter.IsUnliked = true;
+                                p.AssociatedParameter.IsUnlinked = true;
                             p.IsLinked = false;
                         });
+
                         // Параметры типа - это один и тот-же параметр в Ревите, но разные в плагине
                         // Поэтому после "отвязки" нужно пройти по всем параметрам всех семейств и "отвязать" тот-же самый параметр
                         var idsOfSameParameter = new List<int>();
                         foreach (var p in selectedTypeParameters)
                         {
-                            if (idsOfSameParameter.Contains(p.Parameter.Id.IntegerValue)) continue;
+                            if (idsOfSameParameter.Contains(p.Parameter.Id.IntegerValue))
+                                continue;
                             idsOfSameParameter.Add(p.Parameter.Id.IntegerValue);
                             RevitInterop.Document.FamilyManager.AssociateElementParameterToFamilyParameter(p.Parameter, null);
                             foreach (var nestedFamilyInstanceModel in NestedFamilyInstanceModels)
@@ -181,12 +198,16 @@
                                 foreach (var nestedFamilyParameterModel in nestedFamilyInstanceModel.TypeParameters)
                                 {
                                     if (nestedFamilyParameterModel.Parameter.Id.IntegerValue !=
-                                        p.Parameter.Id.IntegerValue) continue;
+                                        p.Parameter.Id.IntegerValue)
+                                        continue;
                                     if (nestedFamilyParameterModel.AssociatedParameter.NestedFamilyParameters.Count > 0)
+                                    {
                                         nestedFamilyParameterModel.AssociatedParameter.NestedFamilyParameters.Remove(
                                             nestedFamilyParameterModel);
+                                    }
+
                                     if (nestedFamilyParameterModel.AssociatedParameter.NestedFamilyParameters.Count == 0)
-                                        nestedFamilyParameterModel.AssociatedParameter.IsUnliked = true;
+                                        nestedFamilyParameterModel.AssociatedParameter.IsUnlinked = true;
                                     nestedFamilyParameterModel.IsLinked = false;
                                 }
                             }
@@ -194,6 +215,7 @@
 
                         tr.Commit();
                     }
+                }
             }
             catch (Exception exception)
             {
@@ -207,6 +229,7 @@
         {
             var selectedAssociatedParameters = AssociatedParameters.Where(p => p.IsSelected).ToList();
             if (selectedAssociatedParameters.Any())
+            {
                 using (Transaction tr = new Transaction(RevitInterop.Document, "Delete parameters"))
                 {
                     tr.Start();
@@ -222,20 +245,22 @@
                         try
                         {
                             RevitInterop.Document.Delete(p.FamilyParameter.Id);
+
                             // if no exception
                             AssociatedParameters.Remove(p);
                         }
                         catch
                         {
-                            MessageBox.Show($"{Language.GetItem(LangItem, "msg9")} {p.FamilyParameter.Definition.Name}", // Can not remove parameter
+                            MessageBox.Show(
+                                $"{Language.GetItem(LangItem, "msg9")} {p.FamilyParameter.Definition.Name}", // Can not remove parameter
                                 MessageBoxIcon.Alert);
                             p.NestedFamilyParameters.Clear();
-                            p.IsUnliked = true;
+                            p.IsUnlinked = true;
                         }
-
                     });
                     tr.Commit();
                 }
+            }
         }
 
         public ICommand CreateParametersCommand { get; }
@@ -249,11 +274,13 @@
             {
                 nestedFamilyInstanceModel.InstanceParameters.ForEach(p =>
                 {
-                    if (p.IsSelected && !p.IsLinked) selectedInstanceParameters.Add(p);
+                    if (p.IsSelected && !p.IsLinked)
+                        selectedInstanceParameters.Add(p);
                 });
                 nestedFamilyInstanceModel.TypeParameters.ForEach(p =>
                 {
-                    if (p.IsSelected && !p.IsLinked) selectedTypeParameters.Add(p);
+                    if (p.IsSelected && !p.IsLinked)
+                        selectedTypeParameters.Add(p);
                 });
             }
 
@@ -264,8 +291,9 @@
                     using (Transaction tr = new Transaction(RevitInterop.Document, "Create parameters"))
                     {
                         tr.Start();
+
                         // При создании нового параметра в текущем семействе для параметра экземпляра, выбранного
-                        // в списке создается всего один параметр независимо от количества экземпляров семействов
+                        // в списке создается всего один параметр независимо от количества экземпляров семейств
                         selectedInstanceParameters.ForEach(p =>
                         {
                             // Сначала проверю на наличие существующего параметра с таким-же именем
@@ -280,9 +308,10 @@
                                     if (associatedParameterModel.FamilyParameter.Id.IntegerValue ==
                                         existFamilyParameter.Id.IntegerValue)
                                     {
-                                        fm.AssociateElementParameterToFamilyParameter(p.Parameter,
+                                        fm.AssociateElementParameterToFamilyParameter(
+                                            p.Parameter,
                                             associatedParameterModel.FamilyParameter);
-                                        associatedParameterModel.IsUnliked = false;
+                                        associatedParameterModel.IsUnlinked = false;
                                         associatedParameterModel.NestedFamilyParameters.Add(p);
                                         p.AssociatedParameter = associatedParameterModel;
                                         p.IsLinked = true;
@@ -312,18 +341,20 @@
                                 p.IsLinked = true;
                                 AssociatedParameters.Add(associatedParameterModel);
                             }
-
                         });
+
                         // При создании нового параметра в текущем семействе для параметра типа, выбранного в 
-                        // списке создается один параметр, но связь устанавливается для всех экземпляров семества
+                        // списке создается один параметр, но связь устанавливается для всех экземпляров семейства
                         // (так как параметр типа содержится в типе, а не в экземпляре), поэтому в списках "моих классов"
                         // нужно отыскать нужные параметры и установить нужные данные
                         var idsOfSameParameter = new List<int>();
                         foreach (var p in selectedTypeParameters)
                         {
-                            if (idsOfSameParameter.Contains(p.Parameter.Id.IntegerValue)) continue;
+                            if (idsOfSameParameter.Contains(p.Parameter.Id.IntegerValue))
+                                continue;
                             idsOfSameParameter.Add(p.Parameter.Id.IntegerValue);
                             AssociatedParameterModel associatedParameterModel = null;
+
                             // Сначала проверю на наличие существующего параметра с таким-же именем
                             var existFamilyParameter = CheckForExistAllowableParameter(p.Parameter);
                             if (existFamilyParameter != null)
@@ -336,9 +367,10 @@
                                     if (parameterModel.FamilyParameter.Id.IntegerValue ==
                                         existFamilyParameter.Id.IntegerValue)
                                     {
-                                        fm.AssociateElementParameterToFamilyParameter(p.Parameter,
+                                        fm.AssociateElementParameterToFamilyParameter(
+                                            p.Parameter,
                                             parameterModel.FamilyParameter);
-                                        parameterModel.IsUnliked = false;
+                                        parameterModel.IsUnlinked = false;
                                         parameterModel.NestedFamilyParameters.Add(p);
                                         p.AssociatedParameter = parameterModel;
                                         p.IsLinked = true;
@@ -370,18 +402,22 @@
 
                             // Искать такие-же параметры в любом случае (создали ли новый или привязали к существующему)
                             if (associatedParameterModel != null)
+                            {
                                 foreach (var nestedFamilyInstanceModel in NestedFamilyInstanceModels)
                                 {
-                                    if (p.NestedFamilyInstance == nestedFamilyInstanceModel) continue;
+                                    if (p.NestedFamilyInstance == nestedFamilyInstanceModel)
+                                        continue;
                                     foreach (var nestedFamilyParameterModel in nestedFamilyInstanceModel.TypeParameters)
                                     {
                                         if (nestedFamilyParameterModel.Parameter.Id.IntegerValue !=
-                                            p.Parameter.Id.IntegerValue) continue;
+                                            p.Parameter.Id.IntegerValue)
+                                            continue;
                                         nestedFamilyParameterModel.IsLinked = true;
                                         nestedFamilyParameterModel.AssociatedParameter = associatedParameterModel;
                                         associatedParameterModel.NestedFamilyParameters.Add(nestedFamilyParameterModel);
                                     }
                                 }
+                            }
                         }
 
                         tr.Commit();
@@ -400,6 +436,7 @@
             FamilyParameter newFamilyParameter)
         {
             if (p.Parameter.HasValue)
+            {
                 switch (p.Parameter.StorageType)
                 {
                     case StorageType.Double:
@@ -415,6 +452,7 @@
                         fm.Set(newFamilyParameter, p.Parameter.AsString());
                         break;
                 }
+            }
         }
 
         [CanBeNull]
@@ -456,6 +494,7 @@
                 newName = baseName + "_" + index;
                 index++;
             }
+
             return newName;
         }
 
@@ -477,8 +516,10 @@
         {
             foreach (FamilyParameter familyParameter in RevitInterop.Document.FamilyManager.GetParameters())
             {
-                if (familyParameter.Definition.Name.Equals(name)) return true;
+                if (familyParameter.Definition.Name.Equals(name))
+                    return true;
             }
+
             return false;
         }
 
@@ -495,6 +536,7 @@
                     {
                         tr.Start();
                         AssociatedParameterModel associatedParameterModel = null;
+
                         // сначала проверить - вдруг он уже есть в окне плагина
                         var hasInWindow = false;
                         foreach (var parameterModel in AssociatedParameters)
@@ -505,7 +547,7 @@
                                    !fm.CurrentType.HasValue(parameterModel.FamilyParameter))
                                     SetValueForCreatedParameter(nestedFamilyParameterModel, fm, parameterModel.FamilyParameter);
                                 fm.AssociateElementParameterToFamilyParameter(nestedFamilyParameterModel.Parameter, parameterModel.FamilyParameter);
-                                parameterModel.IsUnliked = false;
+                                parameterModel.IsUnlinked = false;
                                 parameterModel.NestedFamilyParameters.Add(nestedFamilyParameterModel);
                                 nestedFamilyParameterModel.AssociatedParameter = parameterModel;
                                 nestedFamilyParameterModel.IsLinked = true;
@@ -531,15 +573,18 @@
                                 }
                             }
                         }
+
                         // Искать такие-же параметры в любом случае (создали ли новый или привязали к существующему)
                         if (!nestedFamilyParameterModel.IsInstance && associatedParameterModel != null)
                         {
                             foreach (var nestedFamilyInstanceModel in NestedFamilyInstanceModels)
                             {
-                                if (nestedFamilyInstanceModel == nestedFamilyParameterModel.NestedFamilyInstance) continue;
+                                if (nestedFamilyInstanceModel == nestedFamilyParameterModel.NestedFamilyInstance)
+                                    continue;
                                 foreach (var parameterModel in nestedFamilyInstanceModel.TypeParameters)
                                 {
-                                    if (parameterModel.Parameter.Id.IntegerValue != nestedFamilyParameterModel.Parameter.Id.IntegerValue) continue;
+                                    if (parameterModel.Parameter.Id.IntegerValue != nestedFamilyParameterModel.Parameter.Id.IntegerValue)
+                                        continue;
                                     parameterModel.IsLinked = true;
                                     parameterModel.AssociatedParameter = associatedParameterModel;
                                     associatedParameterModel.NestedFamilyParameters.Add(parameterModel);
@@ -556,6 +601,7 @@
                 ExceptionBox.Show(exception);
             }
         }
+
         /// <summary>Получить текущее значение параметра семейства</summary>
         private static object GetFamilyParameterValue(FamilyManager fm, FamilyParameter familyParameter)
         {
@@ -569,6 +615,7 @@
 
             return null;
         }
+
         /// <summary>Установить временное значение-заглушку для параметра семейства</summary>
         private static void SetTemporaryValueToFamilyParameter(FamilyManager fm, FamilyParameter familyParameter)
         {
@@ -580,6 +627,7 @@
                 case StorageType.String: fm.Set(familyParameter, "temp"); break;
             }
         }
+
         /// <summary>Установить сохраненное значение для параметра семейства</summary>
         private static void SetSavedValueToFamilyParameter(object value, FamilyManager fm, FamilyParameter familyParameter)
         {
@@ -588,22 +636,26 @@
                 case StorageType.Double:
                     if (value != null)
                         fm.Set(familyParameter, (double)value);
-                    else fm.Set(familyParameter, 0);
+                    else
+                        fm.Set(familyParameter, 0);
                     break;
                 case StorageType.ElementId:
                     if (value != null)
                         fm.Set(familyParameter, (ElementId)value);
-                    else fm.Set(familyParameter, ElementId.InvalidElementId);
+                    else
+                        fm.Set(familyParameter, ElementId.InvalidElementId);
                     break;
                 case StorageType.Integer:
                     if (value != null)
                         fm.Set(familyParameter, (int)value);
-                    else fm.Set(familyParameter, 0);
+                    else
+                        fm.Set(familyParameter, 0);
                     break;
                 case StorageType.String:
                     if (value != null)
                         fm.Set(familyParameter, (string)value);
-                    else fm.Set(familyParameter, string.Empty);
+                    else
+                        fm.Set(familyParameter, string.Empty);
                     break;
             }
         }

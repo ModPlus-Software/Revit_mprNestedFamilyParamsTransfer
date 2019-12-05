@@ -16,10 +16,11 @@
             Title = ModPlusAPI.Language.GetItem(LangItem, "h1");
             CbIsInstanceParameterCreate.ItemsSource = new[]
             {
-               ModPlusAPI.Language.GetItem(LangItem, "p1"), //  "Параметр типа",
-               ModPlusAPI.Language.GetItem(LangItem, "p2") //"Параметр экземпляра"
+               ModPlusAPI.Language.GetItem(LangItem, "p1"), // "Параметр типа",
+               ModPlusAPI.Language.GetItem(LangItem, "p2") // "Параметр экземпляра"
             };
         }
+
         private void OnMouseLeftButtonDown(object sender, MouseEventArgs e)
         {
             // Обработчик события повешен на текст так как при нажатии на кнопку не будет работать как надо
@@ -33,15 +34,18 @@
                 }
             }
         }
-        public static T FindParent<T>(DependencyObject child) where T : DependencyObject
+
+        public static T FindParent<T>(DependencyObject child) 
+            where T : DependencyObject
         {
-            //get parent item
-            DependencyObject parentObject = VisualTreeHelper.GetParent(child);
+            // get parent item
+            var parentObject = VisualTreeHelper.GetParent(child);
 
-            //we've reached the end of the tree
-            if (parentObject == null) return null;
+            // we've reached the end of the tree
+            if (parentObject == null)
+                return null;
 
-            //check if the parent matches the type we're looking for
+            // check if the parent matches the type we're looking for
             if (parentObject is T parent)
                 return parent;
             return FindParent<T>(parentObject);
@@ -51,7 +55,6 @@
         {
             NestedParametersScrollViewer.ScrollToVerticalOffset(NestedParametersScrollViewer.VerticalOffset - e.Delta);
             e.Handled = true;
-
         }
     }
 }

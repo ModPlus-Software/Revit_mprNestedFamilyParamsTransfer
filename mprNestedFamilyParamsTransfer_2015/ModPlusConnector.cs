@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using ModPlusAPI.Interfaces;
-
+﻿#pragma warning disable SA1600 // Elements should be documented
 namespace mprNestedFamilyParamsTransfer
 {
+    using System;
+    using System.Collections.Generic;
+    using ModPlusAPI.Interfaces;
+
     public class ModPlusConnector : IModPlusFunctionInterface
     {
         public SupportedProduct SupportedProduct => SupportedProduct.Revit;
@@ -32,7 +33,7 @@ namespace mprNestedFamilyParamsTransfer
         
         public string LName => "Связь параметров вложенных семейств";
         
-        public string Description => "Функция позволяет упростить работу по установке связи между параметрами вложенных семейств с параметрами родительского семейства";
+        public string Description => "Плагин позволяет упростить работу по установке связи между параметрами вложенных семейств с параметрами родительского семейства";
         
         public string Author => "Пекшев Александр aka Modis";
         
@@ -40,9 +41,9 @@ namespace mprNestedFamilyParamsTransfer
         
         public bool CanAddToRibbon => true;
         
-        public string FullDescription => "С помощью функции можно создавать новые параметры в родительском семействе на основе одного или нескольких параметров вложенных семейств. Присутствует возможность задать маску для имени создаваемого параметра путём добавления префикса или суффикса. Функция также позволяет устанавливать и удалять связь с существующими параметрами родительского семейства";
+        public string FullDescription => "С помощью плагина можно создавать новые параметры в родительском семействе на основе одного или нескольких параметров вложенных семейств. Присутствует возможность задать маску для имени создаваемого параметра путём добавления префикса или суффикса. Плагин также позволяет устанавливать и удалять связь с существующими параметрами родительского семейства";
         
-        public string ToolTipHelpImage => "";
+        public string ToolTipHelpImage => string.Empty;
         
         public List<string> SubFunctionsNames => new List<string>();
         
@@ -57,3 +58,4 @@ namespace mprNestedFamilyParamsTransfer
         public List<string> SubClassNames => new List<string>();
     }
 }
+#pragma warning restore SA1600 // Elements should be documented

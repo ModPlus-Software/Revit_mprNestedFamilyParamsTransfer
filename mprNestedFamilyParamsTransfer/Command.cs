@@ -6,7 +6,6 @@
     using Autodesk.Revit.UI;
     using Helpers;
     using ModPlusAPI;
-    using ModPlusAPI.Annotations;
     using ModPlusAPI.Windows;
 
     [Transaction(TransactionMode.Manual)]
@@ -75,7 +74,7 @@
 
                 RevitInterop.UiApplication = commandData.Application;
                 RevitInterop.InitEvents();
-                FunctionStarter.Start();
+                PluginStarter.Start();
 
                 return Result.Succeeded;
             }
@@ -84,32 +83,6 @@
                 ExceptionBox.Show(exception);
                 return Result.Failed;
             }
-        }
-    }
-
-    public static class FunctionStarter
-    {
-        [CanBeNull]
-        public static MainWindow MainWindow;
-
-        public static void Start()
-        {
-            if (MainWindow != null)
-            {
-                MainWindow.Activate();
-                MainWindow.Focus();
-            }
-            else
-            {
-                MainWindow = new MainWindow();
-                MainWindow.Closed += MainWindow_Closed;
-                MainWindow.ShowDialog();
-            }
-        }
-
-        private static void MainWindow_Closed(object sender, EventArgs e)
-        {
-            MainWindow = null;
         }
     }
 }

@@ -9,9 +9,9 @@
     using Autodesk.Revit.DB;
     using Autodesk.Revit.UI;
     using Helpers;
+    using JetBrains.Annotations;
     using Models;
     using ModPlusAPI;
-    using ModPlusAPI.Annotations;
     using ModPlusAPI.Mvvm;
     using ModPlusAPI.Windows;
 
@@ -474,7 +474,7 @@
                     fmParameter.Definition.ParameterType == p.Definition.ParameterType)
                 {
                     var userSet = taskDialog.Show();
-                    FunctionStarter.MainWindow?.Focus();
+                    PluginStarter.MainWindow?.Focus();
                     if (userSet == TaskDialogResult.CommandLink1)
                         return fmParameter;
                     break;

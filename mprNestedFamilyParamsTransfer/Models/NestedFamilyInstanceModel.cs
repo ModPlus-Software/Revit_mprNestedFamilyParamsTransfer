@@ -15,7 +15,7 @@
         public NestedFamilyInstanceModel(FamilyInstance familyInstance, MainViewModel mainViewModel)
         {
             NestedFamilyInstance = familyInstance;
-            ShowFamilyInstanceCommand = new RelayCommand(ShowFamilyInstance);
+            ShowFamilyInstanceCommand = new RelayCommandWithoutParameter(ShowFamilyInstance);
             InstanceParameters = new List<NestedFamilyParameterModel>();
             TypeParameters = new List<NestedFamilyParameterModel>();
             _mainViewModel = mainViewModel;
@@ -81,7 +81,7 @@
 
         public ICommand ShowFamilyInstanceCommand { get; }
 
-        private void ShowFamilyInstance(object o)
+        private void ShowFamilyInstance()
         {
             RevitInterop.UiDocument.Selection.SetElementIds(new List<ElementId>{NestedFamilyInstance.Id});
         }

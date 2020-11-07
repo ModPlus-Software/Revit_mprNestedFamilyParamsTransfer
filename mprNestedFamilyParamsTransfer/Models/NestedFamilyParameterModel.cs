@@ -20,7 +20,7 @@
             Parameter = parameter;
             NestedFamilyInstance = nestedFamilyInstance;
             IsInstance = isInstanceParameter;
-            AssociateToExistFamilyParameterCommand = new RelayCommand(AssociateToExistFamilyParameter);
+            AssociateToExistFamilyParameterCommand = new RelayCommandWithoutParameter(AssociateToExistFamilyParameter);
             _mainViewModel = mainViewModel;
         }
 
@@ -94,7 +94,7 @@
 
         public ICommand AssociateToExistFamilyParameterCommand { get; }
 
-        private void AssociateToExistFamilyParameter(object o)
+        private void AssociateToExistFamilyParameter()
         {
             _mainViewModel.AssociateToExistFamilyParameter(this);
         }

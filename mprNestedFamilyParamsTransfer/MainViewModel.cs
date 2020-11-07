@@ -24,9 +24,9 @@
         public MainViewModel()
         {
             // commands
-            RemoveLinksCommand = new RelayCommand(RemoveLink);
-            DeleteParametersCommand = new RelayCommand(DeleteParameter);
-            CreateParametersCommand = new RelayCommand(CreateParameters);
+            RemoveLinksCommand = new RelayCommandWithoutParameter(RemoveLink);
+            DeleteParametersCommand = new RelayCommandWithoutParameter(DeleteParameter);
+            CreateParametersCommand = new RelayCommandWithoutParameter(CreateParameters);
 
             // get families and parameters
             GetNestedFamilyInstances();
@@ -150,7 +150,7 @@
         public ICommand RemoveLinksCommand { get; }
 
         /// <summary>Удалить связь, не удаляя параметр</summary>
-        private void RemoveLink(object o)
+        private void RemoveLink()
         {
             try
             {
@@ -225,7 +225,7 @@
 
         public ICommand DeleteParametersCommand { get; }
 
-        private void DeleteParameter(object o)
+        private void DeleteParameter()
         {
             var selectedAssociatedParameters = AssociatedParameters.Where(p => p.IsSelected).ToList();
             if (selectedAssociatedParameters.Any())
@@ -265,7 +265,7 @@
 
         public ICommand CreateParametersCommand { get; }
 
-        private void CreateParameters(object o)
+        private void CreateParameters()
         {
             var fm = RevitInterop.Document.FamilyManager;
             var selectedInstanceParameters = new List<NestedFamilyParameterModel>();

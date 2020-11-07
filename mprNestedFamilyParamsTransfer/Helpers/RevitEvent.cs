@@ -1,10 +1,10 @@
-﻿using System;
-using System.Linq;
-using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
-
-namespace mprNestedFamilyParamsTransfer.Helpers
+﻿namespace mprNestedFamilyParamsTransfer.Helpers
 {
+    using System;
+    using System.Linq;
+    using Autodesk.Revit.DB;
+    using Autodesk.Revit.UI;
+
     public class RevitEvent : IExternalEventHandler
     {
         private Action _doAction;
@@ -62,5 +62,4 @@ namespace mprNestedFamilyParamsTransfer.Helpers
             return "RevitEvent";
         }
     }
-
 }

@@ -18,7 +18,9 @@
         {
             try
             {
+#if !DEBUG
                 Statistic.SendCommandStarting(new ModPlusConnector());
+#endif
 
                 var doc = commandData.Application.ActiveUIDocument.Document;
                 if (!doc.IsFamilyDocument)
@@ -28,7 +30,7 @@
                 }
 
                 var fm = doc.FamilyManager;
-                
+
                 // check for familyType
                 if (fm.CurrentType == null)
                 {

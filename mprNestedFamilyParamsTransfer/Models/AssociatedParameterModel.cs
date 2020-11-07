@@ -21,7 +21,7 @@
             _isInstanceParameter = familyParameter.IsInstance ? 1 : 0;
 
             // commands
-            SelectNestedParametersCommand = new RelayCommand(SelectNestedParameters);
+            SelectNestedParametersCommand = new RelayCommandWithoutParameter(SelectNestedParameters);
         }
 
         public FamilyParameter FamilyParameter;
@@ -87,7 +87,7 @@
 
         private bool _isAllSelected;
 
-        private void SelectNestedParameters(object o)
+        private void SelectNestedParameters()
         {
             if (_isAllSelected)
             {

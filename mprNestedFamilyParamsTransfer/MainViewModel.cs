@@ -471,7 +471,11 @@
             {
                 if (fmParameter.Definition.Name.Equals(p.Definition.Name) &&
                     fmParameter.StorageType == p.StorageType &&
+#if R2017 || R2018 || R2019 || R2020 || R2021
                     fmParameter.Definition.ParameterType == p.Definition.ParameterType)
+#else
+                    fmParameter.Definition.GetDataType() == p.Definition.GetDataType())
+#endif
                 {
                     var userSet = taskDialog.Show();
                     PluginStarter.MainWindow?.Focus();
